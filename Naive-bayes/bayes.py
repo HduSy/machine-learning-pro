@@ -20,7 +20,7 @@ def createVocabList(dataSet):
     return list(vocabSet)
 
 
-# 输入参数:词汇表,测试文档
+# 词集模型 输入参数:词汇表,测试文档
 def setOfWords2Vec(vocabList, inputSet):
     returnVec = [0] * len(vocabList)
     for word in inputSet:
@@ -29,6 +29,15 @@ def setOfWords2Vec(vocabList, inputSet):
         else:
             print("the word: %s is not in my Vocabulary!" % word)
     # 输出:测试文档词's 词向量
+    return returnVec
+
+
+# 词袋模型
+def bagOfWords2Vec(vocabList, inputSet):
+    returnVec = [0] * len(vocabList)
+    for word in inputSet:
+        if word in vocabList:
+            returnVec[vocabList.index[word]] += 1
     return returnVec
 
 
@@ -51,6 +60,7 @@ def trainNB0(trainMatrix, trainCategory):
             p0Num += trainMatrix[i]
             p0Denom += sum(trainMatrix[i])
     # 每个元素除以该类别中的总词数
+    # P(Xi|C1) P(Xi|C0)
     p1Vect = log(p1Num / p1Denom)  # change to log()
     p0Vect = log(p0Num / p0Denom)  # change to log()
     return p0Vect, p1Vect, pAbusive
@@ -72,6 +82,7 @@ def testNB():
     for postinDoc in listOposts:
         trainMat.append(setOfWords2Vec(myVocablist, postinDoc))
     p0V, p1V, pAb = trainNB0(array(trainMat), array(listClasses))
+
     testEntry = ['love', 'my', 'dog']
     thisDOC = array(setOfWords2Vec(myVocablist, testEntry))
     print(testEntry, 'classified as :', classifyNB(thisDOC, p0V, p1V, pAb))
